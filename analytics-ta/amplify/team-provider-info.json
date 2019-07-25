@@ -1,0 +1,19 @@
+{
+    "tecace": {
+        "awscloudformation": {
+            "AuthRoleName": "analytics-ta-tecace-20190725155632-authRole",
+            "UnauthRoleArn": "arn:aws:iam::369965801516:role/analytics-ta-tecace-20190725155632-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::369965801516:role/analytics-ta-tecace-20190725155632-authRole",
+            "Region": "us-east-1",
+            "DeploymentBucketName": "analytics-ta-tecace-20190725155632-deployment",
+            "UnauthRoleName": "analytics-ta-tecace-20190725155632-unauthRole",
+            "StackName": "analytics-ta-tecace-20190725155632",
+            "StackId": "arn:aws:cloudformation:us-east-1:369965801516:stack/analytics-ta-tecace-20190725155632/7232b400-af2f-11e9-b42f-0a55ab548dc0"
+        },
+        "categories": {
+            "auth": {
+                "cognito87e621a3": {}
+            }
+        }
+    }
+}
