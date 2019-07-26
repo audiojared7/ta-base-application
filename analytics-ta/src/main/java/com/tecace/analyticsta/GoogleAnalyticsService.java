@@ -15,34 +15,43 @@ public class GoogleAnalyticsService extends AnalyticsService {
 
     @Override
     public void init(String serviceName, Context context) {
+        mIsInitialized = true;
         mServiceName = serviceName;
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
     }
 
     @Override
     public void send(int event, Bundle bundle) {
-        switch (event) {
-            case LOGIN:
-                LogTA.w("made it to login event");
-                bundle.putString("username", "audiojared");
-                bundle.putString("password", "not a safe password");
-                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
-                break;
-            case SEARCH:
-                LogTA.w("made it to search event");
-                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SEARCH, bundle);
-                break;
-            case BUTTON_PRESS:
-                LogTA.w("made it to button press event");
-                mFirebaseAnalytics.logEvent("button_press", bundle);
-                break;
-            default:
-                LogTA.w("Received an unrecognized event");
+        if (mIsInitialized) {
+            switch (event) {
+                case LOGIN:
+                    LogTA.w("made it to login event");
+                    bundle.putString("username", "audiojared");
+                    bundle.putString("password", "not a safe password");
+                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
+                    break;
+                case SEARCH:
+                    LogTA.w("made it to search event");
+                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SEARCH, bundle);
+                    break;
+                case BUTTON_PRESS:
+                    LogTA.w("made it to button press event");
+                    mFirebaseAnalytics.logEvent("button_press", bundle);
+                    break;
+                default:
+                    LogTA.w("Received an unrecognized event");
+            }
         }
     }
 
     @Override
     public void deinit() {
-
+        if (mIsInitialized) {
+            mIsInitialized = false;
+            mServiceName = null;
+            mFirebaseAnalytics = null;
+        } else {
+            LogTA.w("Google hasn't been intialized yet");
+        }
     }
 }

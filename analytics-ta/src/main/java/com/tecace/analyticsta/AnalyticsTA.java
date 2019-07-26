@@ -26,34 +26,38 @@ public class AnalyticsTA implements Analytics {
 
     @Override
     public void init(String serviceName, Context context) {
-        if (mServiceProvider == null) {
-            if (serviceName.equals(GOOGLE)) {
-                mServiceProvider = new GoogleAnalyticsService();
-                mServiceProvider.init(GOOGLE, context);
-            } else if (serviceName.equals(AMAZON)) {
-                mServiceProvider = new AmazonAnalyticsService();
-                mServiceProvider.init(AMAZON, context);
-            }
-        } else {
+        if (mServiceProvider != null) {
             LogTA.w("Service provider has already been initialized to " + mServiceProvider.mServiceName);
+            return;
+        }
+
+        if (serviceName.equals(GOOGLE)) {
+            mServiceProvider = new GoogleAnalyticsService();
+            mServiceProvider.init(GOOGLE, context);
+        } else if (serviceName.equals(AMAZON)) {
+            mServiceProvider = new AmazonAnalyticsService();
+            mServiceProvider.init(AMAZON, context);
         }
     }
 
     @Override
     public void send(int event, Bundle bundle) {
-        if (mServiceProvider != null) {
-            mServiceProvider.send(event, bundle);
-        } else {
+        if (mServiceProvider == null) {
             LogTA.w("Must intialize analytics service provider first");
+            return;
         }
+
+        mServiceProvider.send(event, bundle);
     }
 
     @Override
     public void deinit() {
-        if (mServiceProvider != null) {
-            mServiceProvider.deinit();
-        } else {
+        if (mServiceProvider == null) {
             LogTA.w("Service provider hasn't been intialized yet");
+            return;
         }
+
+        mServiceProvider.deinit();
+        mServiceProvider = null;
     }
 }

@@ -16,12 +16,13 @@ public class AmazonAnalyticsService extends AnalyticsService {
 
     @Override
     public void init(String serviceName, Context context) {
+        mIsInitialized = true;
         mServiceName = serviceName;
 
         mPinpointManager = getPinpointManager(context);
         mPinpointManager.getSessionClient().startSession();
 
-        LogTA.w("Started pinpoint session");
+        LogTA.w("Started Amazon Pinpoint session");
     }
 
     @Override
@@ -31,10 +32,18 @@ public class AmazonAnalyticsService extends AnalyticsService {
 
     @Override
     public void deinit() {
-        mPinpointManager.getSessionClient().stopSession();
-        mPinpointManager.getAnalyticsClient().submitEvents();
+        if (mIsInitialized) {
+            mPinpointManager.getSessionClient().stopSession();
+            mPinpointManager.getAnalyticsClient().submitEvents();
 
-        LogTA.w("Ended pinpoint session");
+            mIsInitialized = false;
+            mServiceName = null;
+            mPinpointManager = null;
+
+            LogTA.w("Ended Amazon Pinpoint session");
+        } else {
+            LogTA.w("Amazon hasn't been intialized yet");
+        }
     }
 
     public static PinpointManager getPinpointManager(final Context applicationContext) {

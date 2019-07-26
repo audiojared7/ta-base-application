@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 public class AnalyticsService implements Analytics {
     protected String mServiceName;
-    protected boolean isInitialized = false;
+    protected boolean mIsInitialized = false;
 
     @Override
     public void init(String serviceName, Context context) {}
