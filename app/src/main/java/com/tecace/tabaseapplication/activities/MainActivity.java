@@ -3,7 +3,6 @@ package com.tecace.tabaseapplication.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 
 import com.android.volley.Request;
@@ -25,15 +24,17 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.tecace.analyticsta.Event.LOGIN;
 import static com.tecace.analyticsta.Event.SEARCH;
 import static com.tecace.analyticsta.ServiceProvider.AMAZON;
 import static com.tecace.analyticsta.ServiceProvider.GOOGLE;
 
 public class MainActivity extends AppCompatActivity {
 
-    @BindView(R.id.init_button)   Button mInitButton;
-    @BindView(R.id.send_button)   Button mSendButton;
-    @BindView(R.id.deinit_button) Button mDeInitButton;
+    @BindView(R.id.init_button_google) Button mInitButtonGoogle;
+    @BindView(R.id.init_button_amazon) Button mInitButtonAmazon;
+    @BindView(R.id.send_button)        Button mSendButton;
+    @BindView(R.id.deinit_button)      Button mDeInitButton;
 
     private AnalyticsTA mAnalyticsTA;
 
@@ -46,18 +47,19 @@ public class MainActivity extends AppCompatActivity {
 
         mAnalyticsTA = AnalyticsTA.getInstance();
 
-        mInitButton.setOnClickListener(view -> {
-//            mAnalyticsTA.init(GOOGLE, this);
-            mAnalyticsTA.init(AMAZON, this);
-        });
+        mInitButtonGoogle.setOnClickListener(view -> mAnalyticsTA.init(GOOGLE, this));
+        mInitButtonAmazon.setOnClickListener(view -> mAnalyticsTA.init(AMAZON, this));
         mSendButton.setOnClickListener(view -> {
             Bundle bundle = new Bundle();
-            bundle.putString("search_term", "my search query");
+
+            bundle.putString("search_query", "my other search query");
             mAnalyticsTA.send(SEARCH, bundle);
+
+//            bundle.putString("username", "audiojared");
+//            bundle.putString("password", "not a safe password");
+//            mAnalyticsTA.send(LOGIN, bundle);
         });
-        mDeInitButton.setOnClickListener(view -> {
-            mAnalyticsTA.deinit();
-        });
+        mDeInitButton.setOnClickListener(view -> mAnalyticsTA.deinit());
     }
 
     void testNetwork() {

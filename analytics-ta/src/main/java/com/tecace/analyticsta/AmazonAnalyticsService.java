@@ -9,10 +9,15 @@ import com.amazonaws.mobile.client.UserStateDetails;
 import com.amazonaws.mobile.config.AWSConfiguration;
 import com.amazonaws.mobileconnectors.pinpoint.PinpointConfiguration;
 import com.amazonaws.mobileconnectors.pinpoint.PinpointManager;
+import com.amazonaws.mobileconnectors.pinpoint.analytics.AnalyticsEvent;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.tecace.loggerta.LogTA;
 
+import static com.tecace.analyticsta.Event.LOGIN;
+import static com.tecace.analyticsta.Event.SEARCH;
+
 public class AmazonAnalyticsService extends AnalyticsService {
-    public static PinpointManager mPinpointManager;
+    private static PinpointManager mPinpointManager;
 
     @Override
     public void init(String serviceName, Context context) {
@@ -22,12 +27,37 @@ public class AmazonAnalyticsService extends AnalyticsService {
         mPinpointManager = getPinpointManager(context);
         mPinpointManager.getSessionClient().startSession();
 
-        LogTA.w("Started Amazon Pinpoint session");
+        LogTA.w("Analytics initialized to Amazon Pinpoint, session started");
     }
 
     @Override
     public void send(int event, Bundle bundle) {
-
+        AnalyticsEvent logEvent = null;
+        if (mIsInitialized) {
+            switch (event) {
+                case LOGIN:
+                    LogTA.w("Sending login event");
+                    String username = bundle.getString("username");
+                    String password = bundle.getString("password");
+                    logEvent = mPinpointManager.getAnalyticsClient()
+                            .createEvent("login")
+                            .withAttribute("username", username)
+                            .withAttribute("password", password);
+                    break;
+                case SEARCH:
+                    LogTA.w("Sending search event");
+                    String searchQuery = bundle.getString("search_query");
+                    LogTA.w("searchQuery: " + searchQuery);
+                    logEvent = mPinpointManager.getAnalyticsClient()
+                            .createEvent("search")
+                            .withAttribute("search_query", searchQuery);
+                    break;
+                default:
+                    LogTA.w("Received an unrecognized event");
+            }
+        }
+        mPinpointManager.getAnalyticsClient().recordEvent(logEvent);
+        mPinpointManager.getAnalyticsClient().submitEvents();
     }
 
     @Override
@@ -40,13 +70,13 @@ public class AmazonAnalyticsService extends AnalyticsService {
             mServiceName = null;
             mPinpointManager = null;
 
-            LogTA.w("Ended Amazon Pinpoint session");
+            LogTA.w("De-initialized Amazon Pinpoint, session ended");
         } else {
             LogTA.w("Amazon hasn't been intialized yet");
         }
     }
 
-    public static PinpointManager getPinpointManager(final Context applicationContext) {
+    private static PinpointManager getPinpointManager(final Context applicationContext) {
         if (mPinpointManager == null) {
             // Initialize the AWS Mobile Client
             final AWSConfiguration awsConfig = new AWSConfiguration(applicationContext);

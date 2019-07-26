@@ -6,7 +6,6 @@ import android.os.Bundle;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.tecace.loggerta.LogTA;
 
-import static com.tecace.analyticsta.Event.BUTTON_PRESS;
 import static com.tecace.analyticsta.Event.LOGIN;
 import static com.tecace.analyticsta.Event.SEARCH;
 
@@ -18,6 +17,8 @@ public class GoogleAnalyticsService extends AnalyticsService {
         mIsInitialized = true;
         mServiceName = serviceName;
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
+
+        LogTA.w("Analytics initialized to Google");
     }
 
     @Override
@@ -25,18 +26,12 @@ public class GoogleAnalyticsService extends AnalyticsService {
         if (mIsInitialized) {
             switch (event) {
                 case LOGIN:
-                    LogTA.w("made it to login event");
-                    bundle.putString("username", "audiojared");
-                    bundle.putString("password", "not a safe password");
+                    LogTA.w("Sending login event");
                     mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
                     break;
                 case SEARCH:
-                    LogTA.w("made it to search event");
+                    LogTA.w("Sending search event");
                     mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SEARCH, bundle);
-                    break;
-                case BUTTON_PRESS:
-                    LogTA.w("made it to button press event");
-                    mFirebaseAnalytics.logEvent("button_press", bundle);
                     break;
                 default:
                     LogTA.w("Received an unrecognized event");
@@ -50,6 +45,8 @@ public class GoogleAnalyticsService extends AnalyticsService {
             mIsInitialized = false;
             mServiceName = null;
             mFirebaseAnalytics = null;
+
+            LogTA.w("De-initialized Google Analytics");
         } else {
             LogTA.w("Google hasn't been intialized yet");
         }

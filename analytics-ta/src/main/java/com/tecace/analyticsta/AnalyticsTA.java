@@ -27,7 +27,7 @@ public class AnalyticsTA implements Analytics {
     @Override
     public void init(String serviceName, Context context) {
         if (mServiceProvider != null) {
-            LogTA.w("Service provider has already been initialized to " + mServiceProvider.mServiceName);
+            LogTA.w("Analytics service provider has already been initialized to " + mServiceProvider.mServiceName);
             return;
         }
 
@@ -53,7 +53,7 @@ public class AnalyticsTA implements Analytics {
     @Override
     public void deinit() {
         if (mServiceProvider == null) {
-            LogTA.w("Service provider hasn't been intialized yet");
+            LogTA.w("Analytics service provider hasn't been intialized yet");
             return;
         }
 
