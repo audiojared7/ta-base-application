@@ -39,30 +39,27 @@ public class AmazonAnalyticsService extends AnalyticsService {
             switch (event) {
                 case LOGIN:
                     LogTA.w("Sending login event");
-
-                    logEvent = mPinpointManager.getAnalyticsClient()
-                            .createEvent("login")
-                            .withAttribute(key, value);
+                    logEvent = mPinpointManager.getAnalyticsClient().createEvent("login").withAttribute(key, value);
                     break;
                 case SEARCH:
                     LogTA.w("Sending search event");
-
-                    logEvent = mPinpointManager.getAnalyticsClient()
-                            .createEvent("search")
-                            .withAttribute(key, value);
+                    logEvent = mPinpointManager.getAnalyticsClient().createEvent("search").withAttribute(key, value);
                     break;
                 default:
                     LogTA.w("Received an unrecognized event");
             }
         }
-        mPinpointManager.getAnalyticsClient().recordEvent(logEvent);
-        mPinpointManager.getAnalyticsClient().submitEvents();
+        if (logEvent != null) {
+            mPinpointManager.getAnalyticsClient().recordEvent(logEvent);
+            mPinpointManager.getAnalyticsClient().submitEvents();
+        }
     }
 
     @Override
     public void send(int event, Bundle bundle) {
         AnalyticsEvent logEvent = null;
-        String[] eventParams = (String[]) bundle.keySet().toArray();
+
+        // initialize the event
         if (mIsInitialized) {
             switch (event) {
                 case LOGIN:
@@ -77,13 +74,19 @@ public class AmazonAnalyticsService extends AnalyticsService {
                     LogTA.w("Received an unrecognized event");
             }
         }
+
+        // send the event
         if (logEvent != null) {
-            for (int i = 0; i < bundle.size(); i++) {
-                logEvent = logEvent.withAttribute(eventParams[i], bundle.getString(eventParams[i]));
+            // add params to the event if we have a bundle with data
+            if (bundle != null && bundle.size() > 0) {
+                String[] eventParams = bundle.keySet().toArray(new String[bundle.size()]);
+                for (int i = 0; i < bundle.size(); i++) {
+                    logEvent = logEvent.withAttribute(eventParams[i], bundle.getString(eventParams[i]));
+                }
             }
+            mPinpointManager.getAnalyticsClient().recordEvent(logEvent);
+            mPinpointManager.getAnalyticsClient().submitEvents();
         }
-        mPinpointManager.getAnalyticsClient().recordEvent(logEvent);
-        mPinpointManager.getAnalyticsClient().submitEvents();
     }
 
     @Override

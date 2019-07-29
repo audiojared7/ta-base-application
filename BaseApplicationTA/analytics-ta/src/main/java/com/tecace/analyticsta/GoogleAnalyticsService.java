@@ -37,10 +37,11 @@ public class GoogleAnalyticsService extends AnalyticsService {
                     mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SEARCH, bundle);
                     break;
                 case APP_UNINSTALL:
-                    mFirebaseAnalytics.logEvent("custom_event", bundle);
+
                     break;
                 default:
                     LogTA.w("Received an unrecognized event");
+                    mFirebaseAnalytics.logEvent("new_test_event_1", bundle);
             }
         }
     }
@@ -62,6 +63,7 @@ public class GoogleAnalyticsService extends AnalyticsService {
                     break;
                 default:
                     LogTA.w("Received an unrecognized event");
+                    mFirebaseAnalytics.logEvent("new_test_event_1", bundle);
             }
         }
     }
