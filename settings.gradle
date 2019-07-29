@@ -1,1 +1,0 @@
-include ':app', ':logger-ta', ':eventbus-ta', ':httpta', ':jsonta', ':httpta', ':networkmanager-ta', ':analytics-ta'

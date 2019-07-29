@@ -1,0 +1,1 @@
+include ':app', ':logger-ta', ':analytics-ta', ':eventbus-ta', ':networkmanager-ta'
