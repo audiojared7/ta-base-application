@@ -1,0 +1,20 @@
+{
+    "appName": "analyticsta",
+    "roleName": "pinpointLambdaRoled6cc7641",
+    "cloudWatchPolicyName": "cloudWatchPolicyd6cc7641",
+    "pinpointPolicyName": "pinpointPolicyd6cc7641",
+    "authPolicyName": "pinpoint_amplify_d6cc7641",
+    "unauthPolicyName": "pinpoint_amplify_d6cc7641",
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
+    "authRoleArn": {
+        "Fn::GetAtt": [
+            "AuthRole",
+            "Arn"
+        ]
+    }
+}
