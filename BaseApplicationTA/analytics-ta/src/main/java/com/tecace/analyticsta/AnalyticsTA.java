@@ -5,11 +5,18 @@ import android.os.Bundle;
 
 import com.tecace.loggerta.LogTA;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static com.tecace.analyticsta.ServiceProvider.AMAZON;
 import static com.tecace.analyticsta.ServiceProvider.GOOGLE;
 
 public class AnalyticsTA implements Analytics {
     private AnalyticsService mServiceProvider;
+
+    private Map<String, EventCallback.Handler> mCustomEventsMap = new HashMap<>();
 
     private static AnalyticsTA mAnalyticsTAInstance;
     private AnalyticsTA() {
@@ -22,6 +29,10 @@ public class AnalyticsTA implements Analytics {
             mAnalyticsTAInstance = new AnalyticsTA();
         }
         return mAnalyticsTAInstance;
+    }
+
+    public void addCustomEvent(String eventName, EventCallback.Handler eventHandler) {
+        mCustomEventsMap.put(eventName, eventHandler);
     }
 
     @Override
@@ -41,7 +52,7 @@ public class AnalyticsTA implements Analytics {
     }
 
     @Override
-    public void send(int event, Bundle bundle) {
+    public void send(String event, Bundle bundle) {
         if (mServiceProvider == null) {
             LogTA.w("Must intialize analytics service provider first");
             return;
@@ -51,13 +62,25 @@ public class AnalyticsTA implements Analytics {
     }
 
     @Override
-    public void send(int event, String key, String value) {
+    public void send(String event, String key, String value) {
         if (mServiceProvider == null) {
             LogTA.w("Must intialize analytics service provider first");
             return;
         }
 
         mServiceProvider.send(event, key, value);
+    }
+
+    @Override
+    public void sendCustom(String customEvent, String key, String value) {
+        EventCallback.Handler callback = mCustomEventsMap.get(customEvent);
+        callback.send(key, value);
+    }
+
+    @Override
+    public void sendCustom(String customEvent, Bundle bundle) {
+        EventCallback.Handler callback = mCustomEventsMap.get(customEvent);
+        callback.send(bundle);
     }
 
     @Override

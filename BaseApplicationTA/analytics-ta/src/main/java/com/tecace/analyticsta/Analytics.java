@@ -6,9 +6,13 @@ import android.os.Bundle;
 public interface Analytics {
     void init(String serviceName, Context context);
 
-    void send(int event, Bundle bundle);
+    void send(String event, Bundle bundle);
 
-    void send(int event, String key, String value);
+    void send(String event, String key, String value);
+
+    void sendCustom(String customEvent, String key, String value);
+
+    void sendCustom(String customEvent, Bundle bundle);
 
     void deinit();
 }

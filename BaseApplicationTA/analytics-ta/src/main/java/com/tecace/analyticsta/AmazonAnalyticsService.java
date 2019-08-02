@@ -33,50 +33,25 @@ public class AmazonAnalyticsService extends AnalyticsService {
     }
 
     @Override
-    public void send(int event, String key, String value) {
-        AnalyticsEvent logEvent = null;
+    public void send(String event, String key, String value) {
         if (mIsInitialized) {
-            switch (event) {
-                case LOGIN:
-                    LogTA.w("Sending login event");
-                    logEvent = mPinpointManager.getAnalyticsClient().createEvent("login").withAttribute(key, value);
-                    break;
-                case SEARCH:
-                    LogTA.w("Sending search event");
-                    logEvent = mPinpointManager.getAnalyticsClient().createEvent("search").withAttribute(key, value);
-                    break;
-                default:
-                    LogTA.w("Received an unrecognized event");
-            }
-        }
-        if (logEvent != null) {
+            LogTA.w(String.format("Sending %s event", event));
+
+            AnalyticsEvent logEvent = mPinpointManager.getAnalyticsClient().createEvent(event)
+                    .withAttribute(key, value);
+
             mPinpointManager.getAnalyticsClient().recordEvent(logEvent);
             mPinpointManager.getAnalyticsClient().submitEvents();
         }
     }
 
     @Override
-    public void send(int event, Bundle bundle) {
-        AnalyticsEvent logEvent = null;
-
-        // initialize the event
+    public void send(String event, Bundle bundle) {
         if (mIsInitialized) {
-            switch (event) {
-                case LOGIN:
-                    LogTA.w("Sending login event");
-                    logEvent = mPinpointManager.getAnalyticsClient().createEvent("login");
-                    break;
-                case SEARCH:
-                    LogTA.w("Sending search event");
-                    logEvent = mPinpointManager.getAnalyticsClient().createEvent("search");
-                    break;
-                default:
-                    LogTA.w("Received an unrecognized event");
-            }
-        }
+            LogTA.w(String.format("Sending %s event", event));
 
-        // send the event
-        if (logEvent != null) {
+            AnalyticsEvent logEvent = mPinpointManager.getAnalyticsClient().createEvent(event);
+
             // add params to the event if we have a bundle with data
             if (bundle != null && bundle.size() > 0) {
                 String[] eventParams = bundle.keySet().toArray(new String[bundle.size()]);
@@ -84,6 +59,7 @@ public class AmazonAnalyticsService extends AnalyticsService {
                     logEvent = logEvent.withAttribute(eventParams[i], bundle.getString(eventParams[i]));
                 }
             }
+
             mPinpointManager.getAnalyticsClient().recordEvent(logEvent);
             mPinpointManager.getAnalyticsClient().submitEvents();
         }

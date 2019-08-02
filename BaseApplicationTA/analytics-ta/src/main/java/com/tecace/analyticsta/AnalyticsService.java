@@ -11,10 +11,16 @@ public class AnalyticsService implements Analytics {
     public void init(String serviceName, Context context) {}
 
     @Override
-    public void send(int event, String key, String value) {}
+    public void send(String event, String key, String value) {}
 
     @Override
-    public void send(int event, Bundle bundle) {}
+    public void send(String event, Bundle bundle) {}
+
+    @Override
+    public void sendCustom(String customEvent, String key, String value) {}
+
+    @Override
+    public void sendCustom(String customEvent, Bundle bundle) {}
 
     @Override
     public void deinit() {}

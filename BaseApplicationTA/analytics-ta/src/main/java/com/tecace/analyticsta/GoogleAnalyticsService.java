@@ -23,7 +23,7 @@ public class GoogleAnalyticsService extends AnalyticsService {
     }
 
     @Override
-    public void send(int event, String key, String value) {
+    public void send(String event, String key, String value) {
         Bundle bundle = new Bundle();
         bundle.putString(key, value);
         if (mIsInitialized) {
@@ -47,7 +47,7 @@ public class GoogleAnalyticsService extends AnalyticsService {
     }
 
     @Override
-    public void send(int event, Bundle bundle) {
+    public void send(String event, Bundle bundle) {
         if (mIsInitialized) {
             switch (event) {
                 case LOGIN:

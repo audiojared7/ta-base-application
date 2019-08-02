@@ -1,7 +1,7 @@
 package com.tecace.analyticsta;
 
 public class Event {
-    public static final int LOGIN = 1;
-    public static final int SEARCH = 3;
-    public static final int APP_UNINSTALL = 5;
+    public static final String LOGIN = "login";
+    public static final String SEARCH = "search";
+    public static final String APP_UNINSTALL = "app_uninstall";
 }

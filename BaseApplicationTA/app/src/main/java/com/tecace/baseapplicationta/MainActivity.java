@@ -9,6 +9,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.squareup.otto.Subscribe;
 import com.tecace.analyticsta.AnalyticsTA;
+import com.tecace.analyticsta.EventCallback;
 import com.tecace.eventbusta.EventBusTA;
 import com.tecace.loggerta.LogTA;
 import com.tecace.networkmanagerta.NetworkManagerTA;
@@ -47,15 +48,31 @@ public class MainActivity extends AppCompatActivity {
         mInitButtonAmazon.setOnClickListener(view -> mAnalyticsTA.init(AMAZON, this));
 
         mSendButton.setOnClickListener(view -> {
-            Bundle bundle = new Bundle();
-            bundle.putString("search_query", "my first search query");
-            mAnalyticsTA.send(SEARCH, bundle);
+//            Bundle bundle = new Bundle();
+//            bundle.putString("search_query", "my first search query");
+//            mAnalyticsTA.send(SEARCH, bundle);
 
-            mAnalyticsTA.send(SEARCH, "search_query", "my second search query");
+//            mAnalyticsTA.send(SEARCH, "search_query", "my second search query");
 
 //            bundle.putString("username", "audiojared");
 //            bundle.putString("password", "not a safe password");
 //            mAnalyticsTA.send(LOGIN, bundle);
+
+            EventCallback.Handler callback = new EventCallback.Handler() {
+                @Override
+                public void send(String key, String value) {
+                    // implement how the custom event should be sent
+                    LogTA.w(String.format("key: %s, value: %s", key, value));
+                }
+
+                @Override
+                public void send(Bundle bundle) {
+                    // implement how the custom event should be sent
+                }
+            };
+
+            mAnalyticsTA.addCustomEvent("login", callback);
+            mAnalyticsTA.sendCustom("login", "test_key", "test_value");
         });
 
         mDeInitButton.setOnClickListener(view -> mAnalyticsTA.deinit());
