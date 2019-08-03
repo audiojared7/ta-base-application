@@ -27,44 +27,16 @@ public class GoogleAnalyticsService extends AnalyticsService {
         Bundle bundle = new Bundle();
         bundle.putString(key, value);
         if (mIsInitialized) {
-            switch (event) {
-                case LOGIN:
-                    LogTA.w("Sending login event");
-                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
-                    break;
-                case SEARCH:
-                    LogTA.w("Sending search event");
-                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SEARCH, bundle);
-                    break;
-                case APP_UNINSTALL:
-
-                    break;
-                default:
-                    LogTA.w("Received an unrecognized event");
-                    mFirebaseAnalytics.logEvent("new_test_event_1", bundle);
-            }
+            LogTA.w(String.format("Sending %s event", event));
+            mFirebaseAnalytics.logEvent(event, bundle);
         }
     }
 
     @Override
     public void send(String event, Bundle bundle) {
         if (mIsInitialized) {
-            switch (event) {
-                case LOGIN:
-                    LogTA.w("Sending login event");
-                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, bundle);
-                    break;
-                case SEARCH:
-                    LogTA.w("Sending search event");
-                    mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SEARCH, bundle);
-                    break;
-                case APP_UNINSTALL:
-                    mFirebaseAnalytics.logEvent("custom_event", bundle);
-                    break;
-                default:
-                    LogTA.w("Received an unrecognized event");
-                    mFirebaseAnalytics.logEvent("new_test_event_1", bundle);
-            }
+            LogTA.w(String.format("Sending %s event", event));
+            mFirebaseAnalytics.logEvent(event, bundle);
         }
     }
 
